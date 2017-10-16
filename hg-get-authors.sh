@@ -1,5 +1,9 @@
 #!/bin/bash
 TMP_REPO_DIR=$1
+if [ ! -d "$TMP_REPO_DIR" ]; then
+  echo "A working directory is required. Use something like \`./$0 /tmp/dir\`."
+  exit 1
+fi
 cd $TMP_REPO_DIR/hg
 
 hgAuthors() {
