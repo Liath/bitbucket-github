@@ -16,6 +16,6 @@ gitPush() {
 }
 export -f gitPush
 
-<$TMP_REPO_DIR/git-repos xargs -I '{}' -n 1 -P 32 bash -c 'gitPush "$@"' _ {}
+cat $TMP_REPO_DIR/hg-repos xargs $TMP_REPO_DIR/git-repos | xargs -I '{}' -n 1 -P 32 bash -c 'gitPush "$@"' _ {}
 
 echo [git] Done pushing git repos to GitHub
