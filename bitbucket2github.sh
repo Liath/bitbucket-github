@@ -15,16 +15,14 @@ TMP_REPO_DIR=$(mktemp -d)
 cd $TMP_REPO_DIR
 echo Working directory is \"$TMP_REPO_DIR\"
 
-# Get list of repos
-# bash $SELF_DIR/get-bitbuckets.sh $TMP_REPO_DIR
-cp /tmp/bb/git-repos .
-cp /tmp/bb/hg-repos .
+# Get list of BitBucket repos
+bash $SELF_DIR/get-bitbuckets.sh $TMP_REPO_DIR
 
-# Fetch|update repos
+# Fetch|update mercurial repos from BitBucket
 bash $SELF_DIR/clone-hg-repos.sh $TMP_REPO_DIR
 
-# Collect Authors
-bash $SELF_DIR/get-authors.sh $TMP_REPO_DIR
+# Collect Authors from mercurial repos (used for mapping commits to users)
+bash $SELF_DIR/hg-get-authors.sh $TMP_REPO_DIR
 
 # Fixup author names
 atom $TMP_REPO_DIR/authors.map
@@ -32,7 +30,7 @@ atom $TMP_REPO_DIR/authors.map
 # Export hg to git
 bash $SELF_DIR/hg2git.sh $TMP_REPO_DIR
 
-# Fetch git repos from BitBucket
+# Fetch|update git repos from BitBucket
 bash $SELF_DIR/clone-git-repos.sh $TMP_REPO_DIR
 
 # Push git repos to GitHub
