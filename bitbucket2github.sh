@@ -21,7 +21,7 @@ bash $SELF_DIR/clone-hg-repos.sh $TMP_REPO_DIR
 bash $SELF_DIR/hg-get-authors.sh $TMP_REPO_DIR
 
 # Fixup author names
-atom $TMP_REPO_DIR/authors.map
+$EDITOR $TMP_REPO_DIR/authors.map
 
 # Export hg to git
 bash $SELF_DIR/hg2git.sh $TMP_REPO_DIR

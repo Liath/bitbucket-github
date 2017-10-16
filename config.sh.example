@@ -3,3 +3,4 @@ BB_CREDS="user:pass"
 GH_ORG='targetAccountOrOrg'
 GH_CREDS='user:token' # Only repo permissions are needed, generate at https://github.com/settings/tokens
 FAST_EXPORT_PATH='~/github/fast-export/hg-fast-export.sh'
+TXT_EDITOR='atom'
