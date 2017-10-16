@@ -1,9 +1,9 @@
 #!/bin/bash
 # Config
-export BB_ORG='inviewlabs'
-export BB_USER='Lupulus'
-export BB_PASS=''
-export GH_ORG='unifilabs'
+export BB_ORG='sourceORG'
+export BB_USER='userWithAccessToSourceORG'
+export BB_PASS='BB_USERsPassword'
+export GH_ORG='targetAccountOrOrg'
 export GH_CREDS='user:token' # Only repo permissions are needed, generate at https://github.com/settings/tokens
 # End config
 
@@ -11,8 +11,7 @@ export BB_CREDS="$BB_USER:$BB_PASS"
 
 # Make a working directory
 SELF_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# TMP_REPO_DIR=$(mktemp -d)
-TMP_REPO_DIR=/tmp/tmp.bOyNbabvDz
+TMP_REPO_DIR=$(mktemp -d)
 cd $TMP_REPO_DIR
 echo Working directory is \"$TMP_REPO_DIR\"
 
