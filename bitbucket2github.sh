@@ -1,13 +1,9 @@
 #!/bin/bash
 # Config
-export BB_ORG='sourceORG'
-export BB_USER='userWithAccessToSourceORG'
-export BB_PASS='BB_USERsPassword'
-export GH_ORG='targetAccountOrOrg'
-export GH_CREDS='user:token' # Only repo permissions are needed, generate at https://github.com/settings/tokens
-# End config
-
-export BB_CREDS="$BB_USER:$BB_PASS"
+if [ ! -f config.sh ]; then
+  echo 'Please update `config.sh.example` and save it as `config.sh`.'
+  exit 1
+fi
 
 # Make a working directory
 SELF_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

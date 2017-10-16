@@ -1,5 +1,18 @@
 #!/bin/bash
+# Config
+if [ ! -f config.sh ]; then
+  echo 'Please update `config.sh.example` and save it as `config.sh`.'
+  exit 1
+fi
+source config.sh
+export GH_ORG
+export GH_CREDS
+
 TMP_REPO_DIR=$1
+if [ ! -d "$TMP_REPO_DIR" ]; then
+  echo "A working directory is required. Use something like \`./$0 /tmp/dir\`."
+  exit 1
+fi
 cd $TMP_REPO_DIR/git
 
 GIT_REPOS=$(curl -su $GH_CREDS "https://api.github.com/orgs/$GH_ORG/repos")
