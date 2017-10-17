@@ -1,22 +1,22 @@
 #!/bin/bash
 # Config
 if [ ! -f config.sh ]; then
-  echo 'Please update `config.sh.example` and save it as `config.sh`.'
+  echo '[clone-git] Please update `config.sh.example` and save it as `config.sh`.'
   exit 1
 fi
 source config.sh
 export BB_ORG
 
-TMP_REPO_DIR=$1
+export TMP_REPO_DIR=$1
 if [ ! -d "$TMP_REPO_DIR" ]; then
-  echo "A working directory is required. Use something like \`./$0 /tmp/dir\`."
+  echo "[clone-git] A working directory is required. Use something like \`./$0 /tmp/dir\`."
   exit 1
 fi
 cd $TMP_REPO_DIR
 
 mkdir -p git && cd git
 gitClone() {
-  echo [git] Cloning $1
+  echo [clone-git] Cloning $1
   if [ -d "$1" ]; then
     cd $1
     git fetch -q
@@ -27,7 +27,13 @@ gitClone() {
 }
 export -f gitClone
 
-echo [git] Fetch targets: $(<$TMP_REPO_DIR/git-repos xargs)
+echo [clone-git] Fetch targets: $(<$TMP_REPO_DIR/git-repos xargs)
 <$TMP_REPO_DIR/git-repos xargs -I '{}' -n 1 -P 32 bash -c 'gitClone "$@"' _ {}
 
-echo [git] Done cloning
+for REPO_NAME in $TMP_REPO_DIR/git-repos; do
+  if [ ! -d $REPO_NAME ]; then
+    echo [clone-git] Failed to fetch all target repos.
+    exit 1
+  fi
+done
+echo [clone-git] Done cloning

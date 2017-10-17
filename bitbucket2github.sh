@@ -7,27 +7,33 @@ fi
 
 # Make a working directory
 SELF_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-TMP_REPO_DIR=$(mktemp -d)
-cd $TMP_REPO_DIR
+if [[ $1 ]]; then
+  if [ -d "$1" ]; then
+    TMP_REPO_DIR=$1
+  else
+    echo "Given directory, \`$1\`, does not seem to exist."
+  fi
+else
+  TMP_REPO_DIR=$(mktemp -d)
+fi
 echo Working directory is \"$TMP_REPO_DIR\"
 
 # Get list of BitBucket repos
-bash $SELF_DIR/get-bitbuckets.sh $TMP_REPO_DIR
+bash $SELF_DIR/get-bitbuckets.sh $TMP_REPO_DIR || exit 1
+read -n1 -rsp $'If desired, you should now edit the git-repos and hg-repos files to select which repos you want to migrate.\nPress any key to continue...\n'
 
 # Fetch|update mercurial repos from BitBucket
-bash $SELF_DIR/clone-hg-repos.sh $TMP_REPO_DIR
+bash $SELF_DIR/clone-hg-repos.sh $TMP_REPO_DIR || exit 1
 
 # Collect Authors from mercurial repos (used for mapping commits to users)
-bash $SELF_DIR/hg-get-authors.sh $TMP_REPO_DIR
-
-# Fixup author names
-$EDITOR $TMP_REPO_DIR/authors.map
+bash $SELF_DIR/hg-get-authors.sh $TMP_REPO_DIR || exit 1
+read -n1 -rsp $'You should now edit the authors.map file to tell hg-fast-export which usernames are the same people.\nPress any key to continue...\n'
 
 # Export hg to git
-bash $SELF_DIR/hg2git.sh $TMP_REPO_DIR
+bash $SELF_DIR/hg2git.sh $TMP_REPO_DIR || exit 1
 
 # Fetch|update git repos from BitBucket
-bash $SELF_DIR/clone-git-repos.sh $TMP_REPO_DIR
+bash $SELF_DIR/clone-git-repos.sh $TMP_REPO_DIR || exit 1
 
 # Push git repos to GitHub
 bash $SELF_DIR/git2github.sh $TMP_REPO_DIR
