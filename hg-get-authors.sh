@@ -8,7 +8,7 @@ cd $TMP_REPO_DIR/hg
 
 hgAuthors() {
   cd $1
-  hg log --template "{author}\n" | sort -fu | xargs -d '\n' -n 1 -I '{}' echo "{}={}" > authors.map
+  hg log --template "{author}\n" | sed -r 's|"|\\"|g' | sort -fu | xargs -d '\n' -n 1 -I '{}' echo "\"{}\"=\"{}\"" > authors.map
   return 0
 }
 export -f hgAuthors
@@ -25,4 +25,4 @@ if [ ! -f $TMP_REPO_DIR/authors.map ]; then
   echo '[hg-authors] Failed to generate authors map.'
   exit 1
 fi
-echo [hg-authors] wrote \"$TMP_REPO_DIR/authors.map\". You should probably edit this to map authors to their names.
+echo [hg-authors] wrote \"$TMP_REPO_DIR/authors.map\".
