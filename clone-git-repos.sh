@@ -30,7 +30,7 @@ export -f gitClone
 echo [clone-git] Fetch targets: $(<$TMP_REPO_DIR/git-repos xargs)
 <$TMP_REPO_DIR/git-repos xargs -I '{}' -n 1 -P 32 bash -c 'gitClone "$@"' _ {}
 
-for REPO_NAME in $TMP_REPO_DIR/git-repos; do
+for REPO_NAME in $(<$TMP_REPO_DIR/git-repos); do
   if [ ! -d $REPO_NAME ]; then
     echo [clone-git] Failed to fetch all target repos.
     exit 1

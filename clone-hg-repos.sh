@@ -31,7 +31,7 @@ export -f hgClone
 echo [clone-hg] Fetch targets: $(<$TMP_REPO_DIR/hg-repos xargs)
 <$TMP_REPO_DIR/hg-repos xargs -I '{}' -n 1 -P 32 bash -c 'hgClone "$@"' _ {}
 
-for REPO_NAME in $TMP_REPO_DIR/hg-repos; do
+for REPO_NAME in $(<$TMP_REPO_DIR/hg-repos); do
   if [ ! -d $REPO_NAME ]; then
     echo [clone-hg] Failed to fetch all target repos.
     exit 1
