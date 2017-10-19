@@ -28,4 +28,7 @@ for BASE_BRANCH in $BRANCHES; do
   done
 done
 
-echo [hg-branches] wrote \"$TMP_REPO_DIR/branches.map\".
+echo [hg-branches] Done scanning branches.
+if [ -d $TMP_REPO_DIR/branches.map ]; then
+  echo '[hg-branches] I have made a best effort attempt to map branch names that will cause issues.'
+fi
