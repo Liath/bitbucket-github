@@ -21,7 +21,7 @@ gitClone() {
     cd $1
     git fetch -q
   else
-    git clone -q "ssh://$BB_ORG@bitbucket.org/$BB_ORG/$1"
+    git clone -q "ssh://git@bitbucket.org/$BB_ORG/$1"
   fi
   return 0
 }
