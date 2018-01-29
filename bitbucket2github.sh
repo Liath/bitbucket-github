@@ -20,7 +20,9 @@ echo Working directory is \"$TMP_REPO_DIR\"
 
 # Get list of BitBucket repos
 bash $SELF_DIR/get-bitbuckets.sh $TMP_REPO_DIR || exit 1
-read -rsp $"If desired, you should now edit the \`git-repos\` and \`hg-repos\` files in \`$TMP_REPO_DIR\` to select which repos you want to migrate.\nPress enter to continue...\n"
+echo "" && echo "If desired, you should now edit the \`git-repos\` and \`hg-repos\` files in \`$TMP_REPO_DIR\` to select which repos you want to migrate."
+read -rsp $"Press enter to continue..."
+echo ""
 
 # Fetch list of existing repos so we can skip any that will just throw an error because they exist
 # If you are rerunning this script because of error, you can remove anything listed in github-repos.json to get it be retried.
@@ -32,11 +34,15 @@ if [ -s "$TMP_REPO_DIR/hg-repos" ]; then
 
   # Collect authors from mercurial repos (used for mapping commits to users)
   bash $SELF_DIR/hg-get-authors.sh $TMP_REPO_DIR || exit 1
-  read -rsp $"You should now edit \`$TMP_REPO_DIR/authors.map\` to tell hg-fast-export which usernames are the same people.\nPress enter to continue...\n"
+  echo "" && echo "You should now edit \`$TMP_REPO_DIR/authors.map\` to tell hg-fast-export which usernames are the same people."
+  read -rsp $"Press enter to continue..."
+  echo ""
 
   # Collect branches from mercurial repos (used for fixing branch name issues)
   bash $SELF_DIR/hg-get-branches.sh $TMP_REPO_DIR || exit 1
-  read -rsp $"You may now create/edit \`$TMP_REPO_DIR/branches.map\` to add any needed mappings.\nPress enter to continue...\n"
+  echo "" && echo "You may now create/edit \`$TMP_REPO_DIR/branches.map\` to add any needed mappings."
+  read -rsp $"Press enter to continue..."
+  echo ""
 
  # Export hg to git
  bash $SELF_DIR/hg2git.sh $TMP_REPO_DIR || exit 1

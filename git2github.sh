@@ -20,7 +20,7 @@ if [ ! -s "$TMP_REPO_DIR/github-repos.json" ]; then
 fi
 
 gitPush() {
-  FOUND=$(jq -r ".[] | select(.name|ascii_downcase==\"$1\") | .name" <"$TMP_REPO_DIR/github-repos.json"
+  FOUND=$(jq -r ".[] | select(.name|ascii_downcase==\"$1\") | .name" <"$TMP_REPO_DIR/github-repos.json")
   if [[ $FOUND ]]; then
     echo [git2GH] Skipping $1 because it already exists on Github.
   else
@@ -38,7 +38,7 @@ cat $TMP_REPO_DIR/hg-repos $TMP_REPO_DIR/git-repos | xargs -I '{}' -n 1 -P 32 ba
 
 cd $TMP_REPO_DIR/git
 for REPO_NAME in $(find . -maxdepth 1 ! -path . -type d -printf '%f\n'); do
-  FOUND=$(jq -r ".[] | select(.name|ascii_downcase==\"$REPO_NAME\") | .name" <"$TMP_REPO_DIR/github-repos.json"
+  FOUND=$(jq -r ".[] | select(.name|ascii_downcase==\"$REPO_NAME\") | .name" <"$TMP_REPO_DIR/github-repos.json")
   if [[ ! $FOUND ]]; then
     cd $TMP_REPO_DIR/git/$REPO_NAME
     if ! git ls-remote origin --exit-code; then
