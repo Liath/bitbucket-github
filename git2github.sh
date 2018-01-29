@@ -15,15 +15,18 @@ if [ ! -d "$TMP_REPO_DIR" ]; then
 fi
 cd $TMP_REPO_DIR/git
 
-export GIT_REPOS=$(curl -su $GH_CREDS "https://api.github.com/orgs/$GH_ORG/repos" | jq 'map({name})')
+if [ ! -s "$TMP_REPO_DIR/github-repos.json" ]; then
+  echo 'github-repos.json is missing. Please run get-githubs.sh first'
+fi
 
 gitPush() {
-  FOUND=$(jq -r ".[] | select(.name|ascii_downcase==\"$1\") | .name" <<<$GIT_REPOS)
+  FOUND=$(jq -r ".[] | select(.name|ascii_downcase==\"$1\") | .name" <"$TMP_REPO_DIR/github-repos.json"
   if [[ $FOUND ]]; then
     echo [git2GH] Skipping $1 because it already exists on Github.
   else
-    curl -su $GH_CREDS "https://api.github.com/orgs/$GH_ORG/repos" -d "{ \"name\": \"$1\", \"private\": true }"
+    curl -su $GH_CREDS "https://api.github.com/orgs/$GH_ORG/repos" -d "{ \"name\": \"$1\", \"private\": true }" 1> /dev/null
     cd $TMP_REPO_DIR/git/$1
+    git remote remove origin &> /dev/null
     git remote add origin "git@github.com:$GH_ORG/$1"
     git push --all
   fi
@@ -35,7 +38,7 @@ cat $TMP_REPO_DIR/hg-repos $TMP_REPO_DIR/git-repos | xargs -I '{}' -n 1 -P 32 ba
 
 cd $TMP_REPO_DIR/git
 for REPO_NAME in $(find . -maxdepth 1 ! -path . -type d -printf '%f\n'); do
-  FOUND=$(jq -r ".[] | select(.name|ascii_downcase==\"$REPO_NAME\") | .name" <<<$GIT_REPOS)
+  FOUND=$(jq -r ".[] | select(.name|ascii_downcase==\"$REPO_NAME\") | .name" <"$TMP_REPO_DIR/github-repos.json"
   if [[ ! $FOUND ]]; then
     cd $TMP_REPO_DIR/git/$REPO_NAME
     if ! git ls-remote origin --exit-code; then

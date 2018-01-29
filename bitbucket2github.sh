@@ -22,6 +22,10 @@ echo Working directory is \"$TMP_REPO_DIR\"
 bash $SELF_DIR/get-bitbuckets.sh $TMP_REPO_DIR || exit 1
 read -rsp $"If desired, you should now edit the \`git-repos\` and \`hg-repos\` files in \`$TMP_REPO_DIR\` to select which repos you want to migrate.\nPress enter to continue...\n"
 
+# Fetch list of existing repos so we can skip any that will just throw an error because they exist
+# If you are rerunning this script because of error, you can remove anything listed in github-repos.json to get it be retried.
+bash $SELF_DIR/get-githubs.sh $TMP_REPO_DIR || exit 1
+
 if [ -s "$TMP_REPO_DIR/hg-repos" ]; then
   # Fetch|update mercurial repos from BitBucket
   bash $SELF_DIR/clone-hg-repos.sh $TMP_REPO_DIR || exit 1

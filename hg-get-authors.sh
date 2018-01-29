@@ -18,7 +18,10 @@ echo [hg-authors] Collecting Authors
 
 # Merge and cleanup dupes
 AUTHOR_MAPS=$(find . -maxdepth 2 -name authors.map)
-cat $AUTHOR_MAPS | sort -fu > $TMP_REPO_DIR/authors.map
+echo '"<>"="<devnull@localhost>"' > $TMP_REPO_DIR/authors.map
+echo '"\<\>"="<devnull@localhost>"' >> $TMP_REPO_DIR/authors.map
+echo '"<devnull@localhost>"="<devnull@localhost>"' >> $TMP_REPO_DIR/authors.map
+cat $AUTHOR_MAPS | sort -fu >> $TMP_REPO_DIR/authors.map
 rm $AUTHOR_MAPS
 
 if [ ! -f $TMP_REPO_DIR/authors.map ]; then
